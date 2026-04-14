@@ -1,10 +1,22 @@
+section .data
+    err_usage db "usage: amenasia <file>", 10
+    err_usage_len equ $ - err_usage
+
 section .text
     global _start
+
+    ;; libs.asm
     extern write
     extern exit
     extern open
     extern close
-    extern error_usage
+    extern read
+
+    ;; strings.asm
+    extern strlen
+
+    ;; io.asm
+    extern process_file
 
 _start:
     mov rdi, [rsp]               ; argc
@@ -27,21 +39,25 @@ _start:
     mov rsi, 0          ; O_RDONLY
     mov rdx, 0          ; mode is ignored
     call open
+    mov r13, rax
 
-    mov rdi, rax
+    mov rdi, r13
+    call process_file
+
+    mov rdi, r13
     call close
     call exit
 
 .exit:
     call error_usage
 
-strlen:
-    mov rax, 0
-.loop:
-    cmp byte [rdi + rax], 0
-    je .done
-    inc rax
-    jmp .loop
-.done:
-    ret
+error_usage:
+    mov rdi, 2                  ; stderr
+    mov rsi, err_usage
+    mov rdx, err_usage_len
+    mov rax, 1
+    syscall
 
+    mov rdi, 1
+    mov rax, 60
+    syscall

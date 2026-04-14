@@ -5,20 +5,20 @@ section .data
     err_open_len equ $ - err_open
     err_close db "error: failed to close file", 10
     err_close_len equ $ - err_close
-    err_usage db "usage: amenasia <file>", 10
-    err_usage_len equ $ - err_usage
 
 section .text
     global write
     global exit
     global open
     global close
-    global error_usage
+    global read
 
     extern sys_write
     extern sys_exit
     extern sys_open
     extern sys_close
+    extern sys_read
+    extern sys_read
 
 ;; --------------------------------
 ;; write(fd=1, buf=rdi, len=rsi)
@@ -81,12 +81,9 @@ close:
     call sys_exit
 
 ;; --------------------------------
-;; error_usage()
+;; read(fd=rdi, buffer=rsi, size=rdx)
 ;; --------------------------------
-error_usage:
-    mov rdi, 2                  ; stderr
-    mov rsi, err_usage
-    mov rdx, err_usage_len
-    call sys_write
-    mov rdi, 1
-    call sys_exit
+read:
+    call sys_read
+    ret
+

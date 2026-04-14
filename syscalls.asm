@@ -3,6 +3,7 @@ section .text
     global sys_exit
     global sys_open
     global sys_close
+    global sys_read
 
 ;; -------------------------
 ;; sys_write(fd, buf, len)
@@ -40,5 +41,16 @@ sys_open:
 ;; -------------------------
 sys_close:
     mov rax, 3
+    syscall
+    ret
+
+;; -------------------------
+;; sys_read(fd, buffer, size)
+;; rdi = fd
+;; rsi = buffer
+;; size = rdx
+;; -------------------------
+sys_read:
+    mov rax, 0
     syscall
     ret
