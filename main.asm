@@ -11,8 +11,9 @@ _start:
     cmp rdi, 2
     jl .exit                      ; no argument — exit instead of segfault
 
-    mov rdi, [rsp + 16]          ; argv[1]
+    mov r12, [rsp + 16]          ; argv[1]
 
+    mov rdi, r12
     call strlen
     mov rsi, rax
     call write
@@ -22,11 +23,12 @@ _start:
     mov rsi, 1
     call write
 
-    mov rdi, rsp
+    mov rdi, r12
     mov rsi, 0          ; O_RDONLY
     mov rdx, 0          ; mode is ignored
     call open
 
+    mov rdi, rax
     call close
     call exit
 
