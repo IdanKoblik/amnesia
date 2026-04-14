@@ -1,32 +1,29 @@
 section .text
     global _start
+    extern write
+    extern exit
 
 _start:
     mov rdi, [rsp]               ; argc
     cmp rdi, 2
-    jl exit                      ; no argument — exit instead of segfault
+    jl .exit                      ; no argument — exit instead of segfault
 
     mov rdi, [rsp + 16]          ; argv[1]
 
     call strlen
+    mov rsi, rax
     call write
 
-    mov byte [rsp], 10
+    mov byte [rsp], 10          ; newline
     mov rdi, rsp
-    mov rax, 1
+    mov rsi, 1
     call write
 
     call exit
 
-write:
-    mov rdx, rax
-    mov rsi, rdi
-
-    mov rax, 1
-    mov rdi, 1
-    syscall
-
-    ret
+.exit:
+    mov rdi, 0
+    call exit
 
 strlen:
     mov rax, 0
@@ -38,7 +35,3 @@ strlen:
 .done:
     ret
 
-exit:
-    mov rax, 60
-    mov rdi, 0
-    syscall
