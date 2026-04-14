@@ -2,6 +2,9 @@ section .text
     global _start
     extern write
     extern exit
+    extern open
+    extern close
+    extern error_usage
 
 _start:
     mov rdi, [rsp]               ; argc
@@ -19,11 +22,16 @@ _start:
     mov rsi, 1
     call write
 
+    mov rdi, rsp
+    mov rsi, 0          ; O_RDONLY
+    mov rdx, 0          ; mode is ignored
+    call open
+
+    call close
     call exit
 
 .exit:
-    mov rdi, 0
-    call exit
+    call error_usage
 
 strlen:
     mov rax, 0
