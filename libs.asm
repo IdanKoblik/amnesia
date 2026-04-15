@@ -9,6 +9,8 @@ section .data
     err_fstat_len equ $ - err_fstat
     err_mmap db "error: mmap failed", 10
     err_mmap_len equ $ - err_mmap
+    err_madvise db "error: madvise failed", 10
+    err_madvise_len equ $ - err_madvise
 
 section .text
     global write
@@ -19,6 +21,7 @@ section .text
     global fstat
     global mmap
     global munmap
+    global madvise
 
     extern sys_write
     extern sys_exit
@@ -28,6 +31,7 @@ section .text
     extern sys_fstat
     extern sys_mmap
     extern sys_munmap
+    extern sys_madvise
 
 ;; --------------------------------
 ;; write(fd=1, buf=rdi, len=rsi)
@@ -136,4 +140,21 @@ mmap:
 munmap:
     call sys_munmap
     ret
+
+;; --------------------------------
+;; madvise(addr=rdi, len=rsi, advice=rdx)
+;; --------------------------------
+madvise:
+    call sys_madvise
+    cmp rax, 0
+    jl .error
+    ret
+
+.error:
+    mov rdi, 2
+    mov rsi, err_madvise
+    mov rdx, err_madvise_len
+    call sys_write
+    mov rdi, 1
+    call sys_exit
 

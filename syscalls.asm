@@ -7,6 +7,7 @@ section .text
     global sys_fstat
     global sys_mmap
     global sys_munmap
+    global sys_madvise
 
 ;; -------------------------
 ;; sys_write(fd, buf, len)
@@ -89,5 +90,16 @@ sys_mmap:
 ;; -------------------------
 sys_munmap:
     mov rax, 11
+    syscall
+    ret
+
+;; -------------------------
+;; sys_madvise(addr, length, advice)
+;; rdi = addr
+;; rsi = length
+;; rdx = advice
+;; -------------------------
+sys_madvise:
+    mov rax, 28
     syscall
     ret

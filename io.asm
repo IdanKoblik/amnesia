@@ -9,6 +9,7 @@ section .text
     extern fstat
     extern mmap
     extern munmap
+    extern madvise
 
 process_file:
     push r12
@@ -33,6 +34,11 @@ process_file:
     call mmap
 
     mov r12, rax
+
+    mov rdi, r12
+    mov rsi, r13
+    mov rdx, 2                   ; MADV_SEQUENTIAL
+    call madvise
 
     mov rdi, r12
     mov rsi, r13
