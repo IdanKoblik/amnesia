@@ -14,6 +14,7 @@ section .text
 
     ;; strings.asm
     extern strlen
+    extern newline
 
     ;; io.asm
     extern process_file
@@ -30,10 +31,8 @@ _start:
     mov rsi, rax
     call write
 
-    mov byte [rsp], 10          ; newline
-    mov rdi, rsp
-    mov rsi, 1
-    call write
+    call newline
+    call newline
 
     mov rdi, r12
     mov rsi, 0          ; O_RDONLY
