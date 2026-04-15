@@ -4,6 +4,9 @@ section .text
     global sys_open
     global sys_close
     global sys_read
+    global sys_fstat
+    global sys_mmap
+    global sys_munmap
 
 ;; -------------------------
 ;; sys_write(fd, buf, len)
@@ -52,5 +55,39 @@ sys_close:
 ;; -------------------------
 sys_read:
     mov rax, 0
+    syscall
+    ret
+
+;; -------------------------
+;; sys_fstat(fd, statbuf)
+;; rdi = fd
+;; rsi = statbuf
+;; -------------------------
+sys_fstat:
+    mov rax, 5
+    syscall
+    ret
+
+;; -------------------------
+;; sys_mmap(addr, length, prot, flags, fd, offset)
+;; rdi = addr
+;; rsi = length
+;; rdx = prot
+;; r10 = flags
+;; r8  = fd
+;; r9  = offset
+;; -------------------------
+sys_mmap:
+    mov rax, 9
+    syscall
+    ret
+
+;; -------------------------
+;; sys_munmap(addr, length)
+;; rdi = addr
+;; rsi = length
+;; -------------------------
+sys_munmap:
+    mov rax, 11
     syscall
     ret

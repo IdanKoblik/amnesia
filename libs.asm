@@ -5,6 +5,10 @@ section .data
     err_open_len equ $ - err_open
     err_close db "error: failed to close file", 10
     err_close_len equ $ - err_close
+    err_fstat db "error: fstat failed", 10
+    err_fstat_len equ $ - err_fstat
+    err_mmap db "error: mmap failed", 10
+    err_mmap_len equ $ - err_mmap
 
 section .text
     global write
@@ -12,13 +16,18 @@ section .text
     global open
     global close
     global read
+    global fstat
+    global mmap
+    global munmap
 
     extern sys_write
     extern sys_exit
     extern sys_open
     extern sys_close
     extern sys_read
-    extern sys_read
+    extern sys_fstat
+    extern sys_mmap
+    extern sys_munmap
 
 ;; --------------------------------
 ;; write(fd=1, buf=rdi, len=rsi)
@@ -85,5 +94,46 @@ close:
 ;; --------------------------------
 read:
     call sys_read
+    ret
+
+;; --------------------------------
+;; fstat(fd=rdi, statbuf=rsi)
+;; --------------------------------
+fstat:
+    call sys_fstat
+    cmp rax, 0
+    jl .error
+    ret
+
+.error:
+    mov rdi, 2
+    mov rsi, err_fstat
+    mov rdx, err_fstat_len
+    call sys_write
+    mov rdi, 1
+    call sys_exit
+
+;; --------------------------------
+;; mmap(addr=rdi, len=rsi, prot=rdx, flags=r10, fd=r8, offset=r9)
+;; --------------------------------
+mmap:
+    call sys_mmap
+    cmp rax, -1
+    je .error
+    ret
+
+.error:
+    mov rdi, 2
+    mov rsi, err_mmap
+    mov rdx, err_mmap_len
+    call sys_write
+    mov rdi, 1
+    call sys_exit
+
+;; --------------------------------
+;; munmap(addr=rdi, len=rsi)
+;; --------------------------------
+munmap:
+    call sys_munmap
     ret
 
