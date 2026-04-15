@@ -1,4 +1,4 @@
-NAME = main
+NAME = amn
 
 SRCS = $(wildcard *.asm)
 OBJS = $(SRCS:.asm=.o)
