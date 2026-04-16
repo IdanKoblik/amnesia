@@ -13,7 +13,7 @@ A brainfuck compiler written in x86_64 assembly.
 Requires `nasm` and `ld` (GNU linker).
 
 ```sh
-git clone https://github.com/IdanKoblik/amenasia.git
+git clone https://github.com/IdanKoblik/amnesia.git
 cd amenasia
 make
 ```
