@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/logo.png" alt="amenasia logo" width="200">
+  <img src="assets/logo.png" alt="amnesia logo" width="200">
 </p>
 
-# amenasia
+# amnesia
 
 A brainfuck compiler written in x86_64 assembly.
 
