@@ -6,15 +6,9 @@ section .text
     global _start
 
     ;; libs.asm
-    extern write
     extern exit
     extern open
     extern close
-    extern read
-
-    ;; strings.asm
-    extern strlen
-    extern newline
 
     ;; io.asm
     extern process_file
@@ -25,14 +19,6 @@ _start:
     jl .exit                      ; no argument — exit instead of segfault
 
     mov r12, [rsp + 16]          ; argv[1]
-
-    mov rdi, r12
-    call strlen
-    mov rsi, rax
-    call write
-
-    call newline
-    call newline
 
     mov rdi, r12
     mov rsi, 0          ; O_RDONLY

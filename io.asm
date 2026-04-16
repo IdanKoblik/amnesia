@@ -5,11 +5,13 @@ section .text
     global process_file
 
     ;; libs.asm
-    extern write
     extern fstat
     extern mmap
     extern munmap
     extern madvise
+
+    ;; translate.asm
+    extern translate
 
 process_file:
     push r12
@@ -42,7 +44,7 @@ process_file:
 
     mov rdi, r12
     mov rsi, r13
-    call write
+    call translate
 
     mov rdi, r12
     mov rsi, r13
