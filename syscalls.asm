@@ -8,6 +8,11 @@ section .text
     global sys_mmap
     global sys_munmap
     global sys_madvise
+    global sys_fork
+    global sys_pipe
+    global sys_dup2
+    global sys_execve
+    global sys_wait4
 
 ;; -------------------------
 ;; sys_write(fd, buf, len)
@@ -101,5 +106,55 @@ sys_munmap:
 ;; -------------------------
 sys_madvise:
     mov rax, 28
+    syscall
+    ret
+
+;; -------------------------
+;; sys_fork()
+;; -------------------------
+sys_fork:
+    mov rax, 57
+    syscall
+    ret
+
+;; -------------------------
+;; sys_pipe(pipefd)
+;; rdi = int[2]
+;; -------------------------
+sys_pipe:
+    mov rax, 22
+    syscall
+    ret
+
+;; -------------------------
+;; sys_dup2(oldfd, newfd)
+;; rdi = oldfd
+;; rsi = newfd
+;; -------------------------
+sys_dup2:
+    mov rax, 33
+    syscall
+    ret
+
+;; -------------------------
+;; sys_execve(path, argv, envp)
+;; rdi = path
+;; rsi = argv
+;; rdx = envp
+;; -------------------------
+sys_execve:
+    mov rax, 59
+    syscall
+    ret
+
+;; -------------------------
+;; sys_wait4(pid, wstatus, options, rusage)
+;; rdi = pid
+;; rsi = wstatus
+;; rdx = options
+;; r10 = rusage
+;; -------------------------
+sys_wait4:
+    mov rax, 61
     syscall
     ret

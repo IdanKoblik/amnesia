@@ -1,7 +1,8 @@
 section .data
-    asm_prologue db "section .bss", 10, "    tape resb 30000", 10, 10
-                 db "section .text", 10, "    global _start", 10, 10
-                 db "_start:", 10, "    mov r12, tape", 10
+    asm_prologue db ".intel_syntax noprefix", 10
+                 db ".bss", 10, "tape: .skip 30000", 10, 10
+                 db ".text", 10, ".global _start", 10, 10
+                 db "_start:", 10, "    lea r12, [rip + tape]", 10
     asm_prologue_len equ $ - asm_prologue
 
     asm_add_r12 db "    add r12, "
@@ -10,10 +11,10 @@ section .data
     asm_sub_r12 db "    sub r12, "
     asm_sub_r12_len equ $ - asm_sub_r12
 
-    asm_add_byte db "    add byte [r12], "
+    asm_add_byte db "    add BYTE PTR [r12], "
     asm_add_byte_len equ $ - asm_add_byte
 
-    asm_sub_byte db "    sub byte [r12], "
+    asm_sub_byte db "    sub BYTE PTR [r12], "
     asm_sub_byte_len equ $ - asm_sub_byte
 
     asm_dot db "    mov rdi, 1", 10, "    mov rsi, r12", 10
@@ -32,7 +33,7 @@ section .data
     asm_colon_nl db ":", 10
     asm_colon_nl_len equ $ - asm_colon_nl
 
-    asm_loop_cmp db "    cmp byte [r12], 0", 10
+    asm_loop_cmp db "    cmp BYTE PTR [r12], 0", 10
     asm_loop_cmp_len equ $ - asm_loop_cmp
 
     asm_je db "    je loop_"

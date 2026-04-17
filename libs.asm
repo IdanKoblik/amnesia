@@ -11,6 +11,14 @@ section .data
     err_mmap_len equ $ - err_mmap
     err_madvise db "error: madvise failed", 10
     err_madvise_len equ $ - err_madvise
+    err_fork db "error: fork failed", 10
+    err_fork_len equ $ - err_fork
+    err_pipe db "error: pipe failed", 10
+    err_pipe_len equ $ - err_pipe
+    err_dup2 db "error: dup2 failed", 10
+    err_dup2_len equ $ - err_dup2
+    err_execve db "error: execve failed", 10
+    err_execve_len equ $ - err_execve
 
 section .text
     global write
@@ -22,6 +30,11 @@ section .text
     global mmap
     global munmap
     global madvise
+    global fork
+    global pipe
+    global dup2
+    global execve
+    global wait4
 
     extern sys_write
     extern sys_exit
@@ -32,6 +45,11 @@ section .text
     extern sys_mmap
     extern sys_munmap
     extern sys_madvise
+    extern sys_fork
+    extern sys_pipe
+    extern sys_dup2
+    extern sys_execve
+    extern sys_wait4
 
 ;; --------------------------------
 ;; write(fd=1, buf=rdi, len=rsi)
@@ -157,4 +175,75 @@ madvise:
     call sys_write
     mov rdi, 1
     call sys_exit
+
+;; --------------------------------
+;; fork() -> pid
+;; --------------------------------
+fork:
+    call sys_fork
+    cmp rax, 0
+    jl .error
+    ret
+
+.error:
+    mov rdi, 2
+    mov rsi, err_fork
+    mov rdx, err_fork_len
+    call sys_write
+    mov rdi, 1
+    call sys_exit
+
+;; --------------------------------
+;; pipe(pipefd=rdi)
+;; --------------------------------
+pipe:
+    call sys_pipe
+    cmp rax, 0
+    jl .error
+    ret
+
+.error:
+    mov rdi, 2
+    mov rsi, err_pipe
+    mov rdx, err_pipe_len
+    call sys_write
+    mov rdi, 1
+    call sys_exit
+
+;; --------------------------------
+;; dup2(oldfd=rdi, newfd=rsi)
+;; --------------------------------
+dup2:
+    call sys_dup2
+    cmp rax, 0
+    jl .error
+    ret
+
+.error:
+    mov rdi, 2
+    mov rsi, err_dup2
+    mov rdx, err_dup2_len
+    call sys_write
+    mov rdi, 1
+    call sys_exit
+
+;; --------------------------------
+;; execve(path=rdi, argv=rsi, envp=rdx)
+;; only returns on failure
+;; --------------------------------
+execve:
+    call sys_execve
+    mov rdi, 2
+    mov rsi, err_execve
+    mov rdx, err_execve_len
+    call sys_write
+    mov rdi, 1
+    call sys_exit
+
+;; --------------------------------
+;; wait4(pid=rdi, status=rsi, options=rdx, rusage=r10)
+;; --------------------------------
+wait4:
+    call sys_wait4
+    ret
 
