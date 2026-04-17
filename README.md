@@ -6,8 +6,6 @@
 
 A brainfuck compiler written in x86_64 assembly.
 
-> **Status:** In development. For now, `amenasia` translates brainfuck source into x86_64 assembly and prints the result to stdout.
-
 ## Install
 
 Requires `nasm` and `ld` (GNU linker).
@@ -32,8 +30,4 @@ Example:
 ./amn fixtures/hello.bf
 ```
 
-The generated assembly is written to stdout. Redirect it to a file to assemble it further:
-
-```sh
-./amn fixtures/hello.bf > hello.asm
-```
+The compiler translates the brainfuck source into x86_64 assembly, pipes it through `gcc`, and produces an `out.bin` executable in the current directory.
